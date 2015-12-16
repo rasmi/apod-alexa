@@ -74,7 +74,7 @@ def get_explanation():
     html = request.read()
     html = html.replace('\n',' ')
     explanation_html = html.split('<b> Explanation: </b>')[1]
-    explanation_html = explanation_html.split("<p> <center>")[0]
+    explanation_html = explanation_html.split('<p> <center>')[0]
     explanation = re.sub(r'<.*?>','', explanation_html)
     explanation = re.sub(r'\s+',' ', explanation)
 
