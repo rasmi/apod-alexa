@@ -73,12 +73,15 @@ def get_explanation():
     request = urllib2.urlopen(url)
     html = request.read()
     html = html.replace('\n',' ')
+
+    image = re.findall(r'<img src=\"(image\/[\w\d\-\_\.\/]*)\"', html, flags=re.IGNORECASE)[0]
+    imageUrl = 'https://apod.nasa.gov/apod/' + image
     explanation_html = html.split('<b> Explanation: </b>')[1]
     explanation_html = explanation_html.split('<p> <center>')[0]
     explanation = re.sub(r'<.*?>','', explanation_html)
     explanation = re.sub(r'\s+',' ', explanation)
 
-    return explanation
+    return {'explanation': explanation, 'imageUrl': imageUrl}
 
 def explanation_response():
     session_attributes = {}
@@ -92,12 +95,15 @@ def build_speechlet_response(title, output):
     return {
         'outputSpeech': {
             'type': 'PlainText',
-            'text': output
+            'text': output['explanation']
         },
         'card': {
-            'type': 'Simple',
+            'type': 'Standard',
             'title': title,
-            'content': output
+            'text': output['explanation'],
+            'image': {
+                'largeImageUrl': output['imageUrl']
+            }
         },
         'shouldEndSession': True
     }
