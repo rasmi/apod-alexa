@@ -1,6 +1,6 @@
-from __future__ import print_function
 import re
-import urllib2
+import urllib.request
+
 
 def lambda_handler(event, context):
     """ Route the incoming request based on type (LaunchRequest, IntentRequest,
@@ -70,8 +70,8 @@ def on_session_ended(session_ended_request, session):
 
 def get_explanation():
     url = 'http://apod.nasa.gov/apod/astropix.html'
-    request = urllib2.urlopen(url)
-    html = request.read()
+    page_request = urllib.request.urlopen(url)
+    html = page_request.read().decode('utf-8')
     html = html.replace('\n',' ')
 
     image = re.findall(r'<img src=\"(image\/[\w\d\-\_\.\/]*)\"', html, flags=re.IGNORECASE)[0]
